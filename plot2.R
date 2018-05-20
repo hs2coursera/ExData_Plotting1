@@ -8,18 +8,20 @@ d <- read.table("data/household_power_consumption.txt",
 d$Date <- as.Date(d$Date, "%d/%m/%Y")
 # Create subset of the loaded data.
 d <- subset(d, Date == "2007-2-1" | Date == "2007-2-2")
+Datetime <- strptime(paste(d$Date, d$Time), "%Y-%m-%d %H:%M:%S")
+d <- cbind(d, Datetime)
 
 # Set local.
 locale <- Sys.getlocale("LC_TIME")
 Sys.setlocale("LC_TIME", "C")
 
 # Create Datetime/Global_active_power plot.
-plot(strptime(paste(d$Date, d$Time), "%Y-%m-%d %H:%M:%S"), 
+plot(d$Datetime, 
      d$Global_active_power, 
      xlab = "",
      ylab = "Global Active Power (kilowatts)",
-     type = "l", 
-     xaxp = c(0, length(d$Date), length(unique(d$Date))))
+     type = "l")
+
 # Create png file.
 dev.copy(png, file = "plot2.png")
 dev.off()
